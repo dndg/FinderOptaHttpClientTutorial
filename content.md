@@ -20,11 +20,11 @@ hardware:
 
 ## Overview
 
-In this tutorial, we will learn how to send POST requests to an HTTP server,
-connecting the Finder Opta to Ethernet. In particular, the Finder Opta will
+In this tutorial, we will learn how to send POST requests to an HTTP server
+connected to the Finder Opta via Ethernet. In particular, the Finder Opta will
 obtain an IP address via DHCP, then it will send a message every 5s, waiting
 for a response from the server which will contain the details of the request
-sent by the Finder Opta itself: this response will be printed to the serial
+sent by the Finder Opta itself. The response will be printed to the serial
 monitor.
 
 ## Goals
@@ -59,7 +59,7 @@ the Arduino IDE.
 Using the `ArduinoHttpClient` library, the Finder Opta can easily generate and
 send HTTP requests of POST type.
 
-To support HTTP communication, we must setup a configuration channel, in this
+To support HTTP communication, we must setup a communication channel, in this
 case Ethernet: this goal is also easily achieved with the class
 `EthernetClient`.
 
@@ -84,7 +84,7 @@ article](https://support.arduino.cc/hc/en-us/articles/5145457742236-Add-librarie
 The only requirement for this tutorial is that the Finder Opta must be
 connected via Ethernet to a device that can assign it a dynamic IP address
 using DHCP, and that can later route the packets from the Finder Opta to the
-HTTP server and viceveversa.
+HTTP server and viceversa.
 
 ### Code Overview
 
@@ -160,7 +160,7 @@ void loop()
 ```
 
 This function sends every 5s a POST request with `Content-Type` set to
-`text/html`, having body `hello there!`: in case the request is successful we
+`text/html`, having body `hello there!`. In case the request is successful we
 will see a response on the serial monitor, which in the case of the
 `http-echo-server` will be a echo of the request itself. A possible output
 example is the following:

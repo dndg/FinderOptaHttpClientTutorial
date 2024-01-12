@@ -25,8 +25,8 @@ In questo tutorial, impareremo ad inviare richieste POST ad un server HTTP
 connesso a Finder Opta tramite Ethernet. In particolare, Finder Opta riceverà
 un indirizzo IP tramite DHCP, ed in seguito invierà ogni 5 secondi un
 messaggio, a cui seguirà una risposta del server contente i dettagli della
-richiesta inviata dal Finder Opta stesso: tale riposta verrà stampata su
-monitor seriale.
+richiesta inviata dal Finder Opta stesso. La riposta verrà stampata su monitor
+seriale.
 
 ## Obiettivi
 
@@ -162,7 +162,7 @@ void loop()
 ```
 
 Questa funzione invia ogni 5 secondi una richiesta POST con `Content-Type` di
-tipo `text/html`, avente body `hello there!`: in caso di successo vedremo la
+tipo `text/html`, avente body `hello there!`. In caso di successo vedremo la
 risposta stampata su monitor seriale, che nel caso di `http-echo-server` sarà
 un echo della richiesta stessa. Un possibile esempio di output è il seguente:
 
