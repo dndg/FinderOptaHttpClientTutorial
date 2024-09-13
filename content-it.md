@@ -64,11 +64,9 @@ HTTP, e viceversa.
 ## Finder Opta e il protocollo HTTP
 
 Grazie alla libreria `ArduinoHttpClient`, Finder Opta può generare e inviare
-facilmente richieste HTTP di tipo POST.
-
-Per consentire la comunicazione tramite il protocollo HTTP, è necessario
-configurare una connessione di rete: in questo caso utilizziamo la classe
-`EthernetClient`.
+facilmente richieste HTTP di tipo POST. Per consentire la comunicazione tramite
+il protocollo HTTP, è necessario configurare una connessione di rete: in questo
+caso utilizziamo la classe `EthernetClient`.
 
 ## Istruzioni
 
@@ -243,8 +241,6 @@ Hello!
 
 In questo tutorial abbiamo esplorato come configurare Finder Opta per inviare
 richieste HTTP POST tramite una connessione Ethernet utilizzando un indirizzo
-IP statico.
-
-Questo approccio apre la strada a numerosi casi d'uso, tra cui il monitoraggio
-remoto, l'invio di dati a servizi di telemetria o il controllo di dispositivi
-connessi tramite comandi incapsulati all'interno di richieste HTTP.
+IP statico. Questo approccio apre la strada a numerosi casi d'uso, tra cui il
+monitoraggio remoto, l'invio di dati a servizi di telemetria o il controllo di
+dispositivi connessi tramite comandi incapsulati all'interno di richieste HTTP.
