@@ -1,7 +1,7 @@
 ---
-title: 'Invio di richieste HTTP con Finder Opta'
+title: 'Invio di richieste HTTP con Finder OPTA'
 description: "Imparare ad inviare tramite Ethernet richieste HTTP con Finder
-              Opta."
+              OPTA."
 author: 'Fabrizio Trovato'
 libraries:
   - name: 'ArduinoHttpClient'
@@ -22,23 +22,23 @@ hardware:
 ## Panoramica
 
 In questo tutorial impareremo a inviare richieste POST tramite Ethernet
-utilizzando Finder Opta. Grazie alla connettività Ethernet integrata, Finder
-Opta può comunicare facilmente con un server remoto tramite il protocollo HTTP.
-Configureremo un indirizzo IP statico per Finder Opta e successivamente
+utilizzando Finder OPTA. Grazie alla connettività Ethernet integrata, Finder
+OPTA può comunicare facilmente con un server remoto tramite il protocollo HTTP.
+Configureremo un indirizzo IP statico per Finder OPTA e successivamente
 invieremo richieste POST a un server HTTP specifico. La risposta del server
 verrà catturata e visualizzata sul monitor seriale, permettendoci di monitorare
 l'intera interazione in tempo reale.
 
 Gli use case più comuni per l'invio di richieste HTTP su dispositivi embedded
 includono la comunicazione con servizi web per monitoraggio, controllo remoto o
-logging di dati. Ad esempio, Finder Opta può inviare richieste ad un server per
+logging di dati. Ad esempio, Finder OPTA può inviare richieste ad un server per
 ricevere una configurazione o per inviare dati di telemetria.
 
 ## Requisiti
 
 ### Hardware
 
-* PLC Finder Opta (x1).
+* PLC Finder OPTA (x1).
 * Cavo USB-C® (x1).
 * Cavo ETH RJ45 (x1).
 
@@ -57,13 +57,13 @@ Editor](https://create.arduino.cc/editor).
 
 ### Connettività
 
-Per seguire questo tutorial, Finder Opta deve essere connesso tramite Ethernet
-ad un dispositivo in grado di instradare i pacchetti da Finder Opta al server
+Per seguire questo tutorial, Finder OPTA deve essere connesso tramite Ethernet
+ad un dispositivo in grado di instradare i pacchetti da Finder OPTA al server
 HTTP, e viceversa.
 
-## Finder Opta e il protocollo HTTP
+## Finder OPTA e il protocollo HTTP
 
-Grazie alla libreria `ArduinoHttpClient`, Finder Opta può generare e inviare
+Grazie alla libreria `ArduinoHttpClient`, Finder OPTA può generare e inviare
 facilmente richieste HTTP di tipo POST. Per consentire la comunicazione tramite
 il protocollo HTTP, è necessario configurare una connessione di rete: in questo
 caso utilizziamo la classe `EthernetClient`.
@@ -74,11 +74,11 @@ caso utilizziamo la classe `EthernetClient`.
 
 Per seguire questo tutorial, sarà necessaria [l'ultima versione dell'Arduino
 IDE](https://www.arduino.cc/en/software). Se è la prima volta che configuri un
-Finder Opta, dai un'occhiata al tutorial [Getting Started with
-Opta](/tutorials/opta/getting-started): in questo tutorial spieghiamo come
-installare il Board Manager per la piattaforma Mbed OS Opta, ovvero l'insieme
-di tool di base necessari a creare e utilizzare uno sketch per Finder Opta con
-Arduino IDE.
+Finder OPTA, dai un'occhiata al tutorial [Getting Started with
+OPTA](https://opta.findernet.com/it/tutorial/getting-started): in questo
+tutorial spieghiamo come installare il Board Manager per la piattaforma Mbed OS 
+OPTA, ovvero l'insieme di tool di base necessari a creare e utilizzare uno 
+sketch per Finder OPTA con Arduino IDE.
 
 Assicurati di installare l'ultima versione della libreria
 [`ArduinoHttpClient`](https://www.arduino.cc/reference/en/libraries/arduinohttpclient/)
@@ -90,7 +90,7 @@ articolo](https://support.arduino.cc/hc/en-us/articles/5145457742236-Add-librari
 
 ### Panoramica del codice
 
-Lo scopo di questo tutorial è inviare messaggi da Finder Opta ad un server HTTP
+Lo scopo di questo tutorial è inviare messaggi da Finder OPTA ad un server HTTP
 tramite Ethernet, stampando la risposta ricevuta su monitor seriale.
 
 Il codice completo dell'esempio è disponibile
@@ -166,8 +166,8 @@ void loop()
 }
 ```
 
-La funzione `setup()`, eseguita una singola volta all'avvio di Finder Opta,
-dovrà occuparsi di configurare l'indirizzo IP statico di Finder Opta:
+La funzione `setup()`, eseguita una singola volta all'avvio di Finder OPTA,
+dovrà occuparsi di configurare l'indirizzo IP statico di Finder OPTA:
 
 ```cpp
 #include <Arduino.h>
@@ -224,7 +224,9 @@ void loop()
 Il nostro sketch invierà ogni 5 secondi una richiesta POST con `Content-Type`
 di tipo `text/plain` e body `Hello!`. Su monitor seriale vedremo stampata la
 risposta ricevuta dal server, in questo caso un dettaglio della richiesta
-stessa. Un possibile esempio di output è il seguente:
+stessa. 
+
+Un possibile esempio di output è il seguente:
 
 ```text
 POST / HTTP/1.1
@@ -239,7 +241,7 @@ Hello!
 
 ## Conclusioni
 
-In questo tutorial abbiamo esplorato come configurare Finder Opta per inviare
+In questo tutorial abbiamo esplorato come configurare Finder OPTA per inviare
 richieste HTTP POST tramite una connessione Ethernet utilizzando un indirizzo
 IP statico. Questo approccio apre la strada a numerosi casi d'uso, tra cui il
 monitoraggio remoto, l'invio di dati a servizi di telemetria o il controllo di

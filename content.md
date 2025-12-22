@@ -1,6 +1,6 @@
 ---
-title: 'Sending HTTP requests using Finder Opta'
-description: 'Learn how to send HTTP requests over Ethernet using Finder Opta.'
+title: 'Sending HTTP requests using Finder OPTA'
+description: 'Learn how to send HTTP requests over Ethernet using Finder OPTA.'
 author: 'Fabrizio Trovato'
 libraries:
   - name: 'ArduinoHttpClient'
@@ -20,57 +20,63 @@ hardware:
 
 ## Overview
 
-In this tutorial, we will learn how to send POST requests to an HTTP server
-connected to the Finder Opta via Ethernet. In particular, the Finder Opta will
-obtain an IP address via DHCP, then it will send a message every 5s, waiting
-for a response from the server which will contain the details of the request
-sent by the Finder Opta itself. The response will be printed to the serial
-monitor.
+In this tutorial, we will learn how to send POST requests via Ethernet using
+Finder OPTA. Thanks to its built-in Ethernet connectivity, Finder OPTA can
+easily communicate with a remote server using the HTTP protocol. We will set a
+static IP address for Finder OPTA and then send POST requests to a specific HTTP
+server. The server response will be captured and displayed on the serial
+monitor, allowing us to monitor the entire interaction in real time.
 
-## Goals
+The most common use cases for sending HTTP requests on embedded devices include
+communicating with web services for monitoring, remote control, or data logging.
+For example, Finder OPTA can send requests to a server to receive a
+configuration or to send telemetry data.
 
-* Learn how to assign a dynamic IP addrress to the Finder Opta.
-* Learn how to send HTTP requests over Ethernet using Finder Opta.
-
-## Required Hardware and Software
+## Requirements
 
 ### Hardware Requirements
 
-* Finder Opta PLC (x1).
+* Finder OPTA PLC (x1).
 * USB-C® cable (x1).
 * ETH RJ45 cable (x1).
 
-### Software Requirements
+### Software
 
-* [Arduino IDE 1.8.10+](https://www.arduino.cc/en/software), [Arduino IDE
-2.0+](https://www.arduino.cc/en/software) or [Arduino Web
+* [Arduino IDE 2.0+](https://www.arduino.cc/en/software) or [Arduino Web
 Editor](https://create.arduino.cc/editor).
-* If you choose an offline Arduino IDE, you must install the
-`ArduinoHttpClient` library. You can install it using the Library Manager of
+* If you use the offline Arduino IDE, you must install the
+`ArduinoHttpClient` library using the Library Manager of
 the Arduino IDE.
 * [Example code](assets/OptaHttpClientTutorial.zip).
-* An HTTP server: for the sake of simplicity we recommend something like
-  [http-echo-server](https://github.com/watson/http-echo-server) which can be
-  easily setup on a computer with a couple commands, and by default it will
-  respond to requests with a reply containing an echo of the request itself.
+* An HTTP server: for simplicity, we recommend
+  [http-echo-server](https://github.com/watson/http-echo-server), a server
+  that is easy to set up on any computer with a few commands. This server
+  responds to requests by returning an "echo" of the content sent,
+  making it ideal for testing HTTP communication.
 
-## Finder Opta and the HTTP protocol
+### Connectivity
 
-Using the `ArduinoHttpClient` library, the Finder Opta can easily generate and
-send HTTP requests of POST type.
+To follow this tutorial, Finder OPTA must be connected via Ethernet to a device
+capable of routing packets from Finder OPTA to the HTTP server, and vice versa.
 
-To support HTTP communication, we must setup a communication channel, in this
-case Ethernet: this goal is also easily achieved with the class
-`EthernetClient`.
+## Finder OPTA and the HTTP Protocol
+
+Thanks to the `ArduinoHttpClient` library, Finder OPTA can easily generate and
+send HTTP POST requests. To enable communication via the HTTP protocol, it is
+necessary to configure a network connection: in this case we use the
+`EthernetClient` class.
 
 ## Instructions
 
-### Setting Up the Arduino IDE
+### Arduino IDE Configuration
 
-This tutorial will need [the latest version of the Arduino
-IDE](https://www.arduino.cc/en/software). If it is your first time setting up
-the Finder Opta, check out the [getting started
-tutorial](/tutorials/opta/getting-started).
+To follow this tutorial, you will need [the latest version of the Arduino
+IDE](https://www.arduino.cc/en/software). If this is your first time setting up
+a Finder OPTA, check out the tutorial
+[Getting Started with OPTA](https://opta.findernet.com/en/tutorial/getting-started):
+in this tutorial, we explain how to install the Board Manager for the Mbed OS
+OPTA platform, which is the set of basic tools needed to create and use a
+sketch for Finder OPTA with Arduino IDE.
 
 Make sure you install the latest version of the
 [`ArduinoHttpClient`](https://www.arduino.cc/reference/en/libraries/arduinohttpclient/)
@@ -79,104 +85,160 @@ library, as it will be used to implement the communication with the server.
 For further details on how to manually install libraries refer to [this
 article](https://support.arduino.cc/hc/en-us/articles/5145457742236-Add-libraries-to-Arduino-IDE).
 
-### Connectivity
+### Code overview
 
-The only requirement for this tutorial is that the Finder Opta must be
-connected via Ethernet to a device that can assign it a dynamic IP address
-using DHCP, and that can later route the packets from the Finder Opta to the
-HTTP server and viceversa.
-
-### Code Overview
-
-The goal of the following example is to send messages from the Finder Opta to
-an HTTP server via Ethernet, printing on the serial monitor the received
-response.
+The purpose of this tutorial is to send messages from the Finder OPTA to an HTTP
+server via Ethernet, printing the received response on the serial monitor.
 
 The full code of the example is available
-[here](assets/OptaHttpClientTutorial.zip): after extracting the files the
-sketch can be compiled and uploaded to the Finder Opta.
+[here](assets/OptaHttpClientTutorial.zip). You can extract the contents of the
+`.zip` file and copy it to the ~/Documents/Arduino folder, or alternatively
+create a new sketch called `OptaHttpClientTutorial` using the Arduino
+IDE and paste the code from the tutorial.
 
-#### Setting up the program
+Let's now write the `OptaHttpClientTutorial` sketch, which like all
+Arduino sketches will consist of a `setup()` function and a `loop()` function:
 
-At the start of the sketch we will declare the variables needed to setup the
-HTTP communication:
+```cpp
+void setup()
+{
+  // Setup code, executed at startup
+}
+
+void loop()
+{
+  // Loop code, running infinitely
+}
+```
+
+At the beginning of our sketch we import the libraries necessary for the
+program:
 
 ```cpp
 #include <Arduino.h>
 #include <Ethernet.h>
 #include <ArduinoHttpClient.h>
-#include "opta_info.h"
 
-OptaBoardInfo *info;
-OptaBoardInfo *boardInfo();
-EthernetClient ethernetClient;
-HttpClient httpClient = HttpClient(ethernetClient, "192.168.10.1", 64738); // IP address and port of the HTTP server.
-```
+void setup()
+{
+  // Setup code, executed at startup
+}
 
-In particular the class `OptaBoardInfo` allows to access the MAC address of the
-Finder Opta, so that we can perform a DHCP lease, shown in the following
-`setup()` code:
-
-```cpp
-    info = boardInfo();
-    // Check if secure informations are available since MAC Address is among them.
-    if (info->magic = 0xB5)
-    {
-        // Attempt DHCP lease.
-        if (Ethernet.begin(info->mac_address) == 0)
-        {
-            err = true;
-        }
-    }
-    else
-    {
-        err = true;
-    }
-```
-
-In case of connectivity issues LED 0 will blink, otherwise the Finder Opta will
-receive its dynamic IP address and we will go on with the program execution.
-
-#### Seding POST requests
-
-Below we find the code of the `loop()` function:
-
-```cpp
 void loop()
 {
-    int result = httpClient.post("/", "text/html", "hello there!");
-    if (result == 0)
-    {
-        String response = httpClient.responseBody();
-        Serial.println(response);
-    }
-    else
-    {
-        Serial.println("fail!");
-    }
-
-    delay(5000); // Ping every 5s.
+  // Loop code, executed infinitely
 }
 ```
 
-This function sends every 5s a POST request with `Content-Type` set to
-`text/html`, having body `hello there!`. In case the request is successful we
-will see a response on the serial monitor, which in the case of the
-`http-echo-server` will be a echo of the request itself. A possible output
-example is the following:
+In particular we have imported the libraries:
+
+* `Arduino`: contains numerous basic functionalities for Arduino boards, and it
+   is therefore good practice to import it at the beginning of all sketches.
+* `Ethernet.h`: required to initialize Ethernet connectivity.
+* `ArduinoHttpClient.h`: implements the HTTP protocol.
+
+We proceed by configuring an HTTP client, specifying the IP address and port
+of the server to which we will send requests:
+
+```cpp
+#include <Arduino.h>
+#include <Ethernet.h>
+#include <ArduinoHttpClient.h>
+
+#define SERVER_IP "192.168.1.1"
+#define SERVER_PORT 8080
+
+EthernetClient ethernetClient;
+HttpClient httpClient = HttpClient(ethernetClient, SERVER_IP, SERVER_PORT); 
+
+void setup()
+{
+  // Setup code, executed at startup
+}
+
+void loop()
+{
+  // Loop code, executed infinitely
+}
+```
+
+The `setup()` function, executed a single time at the startup of Finder OPTA,
+will configure the static IP address of Finder OPTA:
+
+```cpp
+#include <Arduino.h>
+#include <Ethernet.h>
+#include <ArduinoHttpClient.h>
+
+#define SERVER_IP "192.168.1.1"
+#define SERVER_PORT 8080
+
+EthernetClient ethernetClient;
+HttpClient httpClient = HttpClient(ethernetClient, SERVER_IP, SERVER_PORT);
+
+void setup()
+{
+    IPAddress ip(192, 168, 1, 100);
+    Ethernet.begin(ip);
+}
+
+void loop()
+{
+    // Loop code, executed infinitely
+}
+```
+
+In the `loop()` function, we will send a POST request every 5 seconds, printing
+the received response to the serial monitor:
+
+```cpp
+#include <Arduino.h>
+#include <Ethernet.h>
+#include <ArduinoHttpClient.h>
+
+#define SERVER_IP "192.168.1.1"
+#define SERVER_PORT 8080
+
+EthernetClient ethernetClient;
+HttpClient httpClient = HttpClient(ethernetClient, SERVER_IP, SERVER_PORT);
+
+void setup()
+{
+    Serial.begin(9600);
+    IPAddress ip(192, 168, 1, 100);
+    Ethernet.begin(ip);
+}
+
+void loop()
+{
+    httpClient.post("/", "text/plain", "Hello!");
+    Serial.println(httpClient.responseBody());
+    delay(5000);
+}
+```
+
+Our sketch will send a POST request every 5 seconds with a `Content-Type`of 
+`text/plain` and a body of `Hello!`. On the serial monitor, we will see the
+response received from the server printed, in this case, a detail of the request
+itself. 
+
+A possible example of the output is as follows:
 
 ```text
-hello there!
 POST / HTTP/1.1
-Host: 192.168.10.1:64738
+Host: 192.168.1.1:8080
 User-Agent: Arduino/2.2.0
 Connection: close
-Content-Type: text/html
-Content-Length: 5
+Content-Type: text/plain
+Content-Length: 6
+
+Hello!
 ```
 
 ## Conclusion
 
-This tutorial shows how to assign a dynamic IP address to the Finder Opta and
-then how to use the Ethernet channel to send HTTP requests of POST type to a
-sever.
+In this tutorial, we explored how to configure Finder OPTA to send HTTP POST 
+requests via an Ethernet connection using a static IP address. This approach 
+opens the door to numerous use cases, including remote monitoring, sending data 
+to telemetry services, or controlling connected devices via commands 
+encapsulated within HTTP requests.
